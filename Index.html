@@ -1,1 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b14">
+<meta name="description" content="Classic E-Sport - Free Fire tournament registration, matches, prize pools and leaderboards.">
+<title>Classic E-Sport | Tournament Arena</title>
 
+<style>
+:root {
+  --bg: #080b14;
+  --card: #111827;
+  --gold: #ffbd39;
+  --orange: #ff6538;
+  --text: #f5f7ff;
+  --muted: #a5aec2;
+  --green: #38e69b;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+}
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 6%;
+  background: #0c1120;
+  border-bottom: 1px solid #252d40;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.logo {
+  font-size: 21px;
+  font-weight: 900;
+  color: var(--gold);
+}
+.logo span { color: white; }
+nav { display: flex; gap: 18px; align-items: center; }
+nav a {
+  color: var(--text);
+  text-decoration: none;
+  font-size: 13px;
+}
+nav a:hover { color: var(--gold); }
+.btn {
+  background: linear-gradient(135deg, var(--gold), var(--orange));
+  border: 0;
+  border-radius: 9px;
+  padding: 12px 17px;
+  color: #111;
+  font-weight: 800;
+}
+.btn:hover { filter: brightness(1.1); }
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+}
+.hero {
+  padding: 75px 6% 65px;
+  background:
+    radial-gradient(ellipse at 80% 30%, #47220e 0%, transparent 45%),
+    radial-gradient(ellipse at 20% 80%, #18264a 0%, transparent 50%),
+    #080b14;
+  text-align: center;
+}
+.tag {
+  display: inline-block;
+  color: var(--gold);
+  border: 1px solid #76551e;
+  background: #241b10;
+  padding: 8px 13px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: bold;
+}
+.hero h1 {
+  font-size: clamp(38px, 8vw, 76px);
+  line-height: 1.05;
+  margin: 23px 0 15px;
+  font-weight: 900;
+}
+.hero h1 span { color: var(--gold); }
+.hero p {
+  max-width: 600px;
+  margin: 0 auto 25px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  max-width: 650px;
+  margin: 40px auto 0;
+}
+.stat {
+  background: #111827cc;
+  border: 1px solid #293247;
+  padding: 19px 8px;
+  border-radius: 13px;
+}
+.stat strong {
+  display: block;
+  font-size: 24px;
+  color: var(--gold);
+}
+.stat small { color: var(--muted); }
+section { padding: 55px 6%; }
+.section-head { margin-bottom: 25px; }
+.section-head h2 { font-size: 28px; margin: 0 0 9px; }
+.section-head p { color: var(--muted); margin: 0; }
+.filters {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+.filter {
+  padding: 10px 15px;
+  border-radius: 8px;
+  background: #111827;
+  border: 1px solid #30394e;
+  color: white;
+}
+.filter.active {
+  background: var(--gold);
+  color: #111;
+  border-color: var(--gold);
+  font-weight: bold;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.card {
+  background: var(--card);
+  border: 1px solid #293247;
+  border-radius: 15px;
+  padding: 21px;
+  min-width: 0;
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.badge {
+  font-size: 11px;
+  color: var(--green);
+  background: #123126;
+  padding: 7px 9px;
+  border-radius: 6px;
+}
+.game-icon {
+  font-size: 37px;
+  margin: 17px 0 8px;
+}
+.card h3 { margin: 8px 0; font-size: 19px; }
+.muted { color: var(--muted); font-size: 13px; line-height: 1.7; }
+.details {
+  border-top: 1px solid #293247;
+  border-bottom: 1px solid #293247;
+  margin: 17px 0;
+  padding: 13px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.details small { color: var(--muted); display: block; margin-bottom: 6px; }
+.details strong { font-size: 15px; }
+.prize { color: var(--green); }
+.full { width: 100%; }
+.empty {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  padding: 30px;
+  text-align: center;
+}
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 430px; }
+th, td {
+  text-align: left;
+  padding: 15px;
+  border-bottom: 1px solid #293247;
+}
+th { color: var(--gold); font-size: 13px; }
+td { font-size: 14px; }
+.notice {
+  border: 1px solid #6c5122;
+  background: #211b11;
+  border-radius: 10px;
+  padding: 15px;
+  color: #f7d58d;
+  line-height: 1.6;
+  font-size: 13px;
+  margin-top: 20px;
+}
+.form-card { max-width: 500px; margin: auto; }
+label { display: block; font-size: 13px; margin: 14px 0 7px; }
+input, select {
+  width: 100%;
+  padding: 13px;
+  border-radius: 8px;
+  background: #080b14;
+  color: white;
+  border: 1px solid #30394e;
+}
+input:focus, select:focus { outline: 1px solid var(--gold); }
+.form-message { margin-top: 14px; font-size: 13px; line-height: 1.6; }
+footer {
+  border-top: 1px solid #293247;
+  padding: 30px 6%;
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+footer strong { color: var(--gold); }
+@media (max-width: 750px) {
+  header { padding: 14px 4%; flex-wrap: wrap; gap: 14px; }
+  nav { width: 100%; overflow-x: auto; gap: 18px; padding-bottom: 3px; }
+  nav a { white-space: nowrap; }
+  .hero { padding: 55px 5%; }
+  section { padding: 42px 5%; }
+  .grid { grid-template-columns: 1fr; }
+  .stats { gap: 7px; }
+  .stat strong { font-size: 20px; }
+  .stat small { font-size: 10px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">CLASSIC<span> E-SPORT</span></div>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#tournaments">Tournaments</a>
+    <a href="#leaderboard">Leaderboard</a>
+    <a href="#register">Register</a>
+  </nav>
+</header>
+
+<main>
+<section class="hero" id="home">
+  <span class="tag">⚡ COMPETE · CONQUER · WIN</span>
+  <h1>ENTER THE <span>ARENA</span></h1>
+  <p>
+    Your next victory starts here. Discover tournaments,
+    compete with players, build your squad and climb the leaderboard.
+  </p>
+  <a href="#tournaments"><button class="btn">Explore Tournaments →</button></a>
+
+  <div class="stats">
+    <div class="stat">
+      <strong id="tournamentCount">6</strong>
+      <small>Tournaments</small>
+    </div>
+    <div class="stat">
+      <strong>4</strong>
+      <small>Game Modes</small>
+    </div>
+    <div class="stat">
+      <strong>24/7</strong>
+      <small>Gaming Community</small>
+    </div>
+  </div>
+</section>
+
+<section id="tournaments">
+  <div class="section-head">
+    <h2>🏆 Live Tournament Arena</h2>
+    <p>Choose your mode and explore available matches.</p>
+  </div>
+
+  <div class="filters" id="filters">
+    <button class="filter active" data-filter="All">All</button>
+    <button class="filter" data-filter="Solo">Solo</button>
+    <button class="filter" data-filter="Duo">Duo</button>
+    <button class="filter" data-filter="Squad">Squad</button>
+    <button class="filter" data-filter="Clash Squad">Clash Squad</button>
+    <button class="filter" data-filter="Bermuda">Bermuda</button>
+  </div>
+
+  <div class="grid" id="tournamentGrid"></div>
+
+  <div class="notice">
+    ⚠️ Demo notice: Tournament entries, player counts and prize pools
+    shown here are sample data. No real tournament is booked and no
+    payment is collected by this demo website.
+  </div>
+</section>
+
+<section id="leaderboard">
+  <div class="section-head">
+    <h2>🥇 Top Players</h2>
+    <p>Sample leaderboard — real rankings require a connected database.</p>
+  </div>
+
+  <div class="card table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Player</th>
+          <th>Matches Won</th>
+          <th>Points</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>🥇 1</td><td>ProHunter</td><td>18</td><td>920</td></tr>
+        <tr><td>🥈 2</td><td>ShadowX</td><td>15</td><td>810</td></tr>
+        <tr><td>🥉 3</td><td>FireStorm</td><td>12</td><td>740</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="register">
+  <div class="section-head" style="text-align:center">
+    <h2>🎮 Join the Arena</h2>
+    <p>Fill in your details to try the demo registration form.</p>
+  </div>
+
+  <div class="card form-card">
+    <form id="registrationForm">
+      <label for="playerName">Player Name</label>
+      <input id="playerName" name="playerName" maxlength="40"
+        placeholder="Enter your gaming name" required>
+
+      <label for="email">Email Address</label>
+      <input id="email" name="email" type="email"
+        placeholder="Enter your email" required>
+
+      <label for="gameId">Free Fire Player UID</label>
+      <input id="gameId" name="gameId" inputmode="numeric"
+        maxlength="25" placeholder="Enter your player UID" required>
+
+      <label for="gameMode">Choose Game Mode</label>
+      <select id="gameMode" name="gameMode" required>
+        <option value="">Select a mode</option>
+        <option>Solo</option>
+        <option>Duo</option>
+        <option>Squad</option>
+        <option>Clash Squad</option>
+        <option>Bermuda</option>
+      </select>
+
+      <button class="btn full" style="margin-top:20px" type="submit">
+        Submit Demo Registration
+      </button>
+
+      <div id="formMessage" class="form-message" aria-live="polite"></div>
+    </form>
+
+    <p class="muted">
+      This demo does not save or send your details to a server.
+      Do not enter sensitive personal information.
+    </p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <strong>CLASSIC E-SPORT</strong><br>
+  Built for gamers. Designed for competition.<br>
+  Independent fan project. Not affiliated with or endorsed by Garena.
+  <br>© <span id="year"></span> Classic E-Sport
+</footer>
+
+<script>
+const tournaments = [
+  {id:1, name:"Solo Showdown", mode:"Solo", map:"Bermuda",
+   entry:10, prize:1000, slots:48, filled:21},
+  {id:2, name:"Duo Dominators", mode:"Duo", map:"Bermuda",
+   entry:20, prize:2000, slots:24, filled:12},
+  {id:3, name:"Squad Championship", mode:"Squad", map:"Bermuda",
+   entry:40, prize:5000, slots:12, filled:7},
+  {id:4, name:"Clash Squad Battle", mode:"Clash Squad", map:"Clash Squad",
+   entry:30, prize:3000, slots:16, filled:9},
+  {id:5, name:"Bermuda Solo Cup", mode:"Solo", map:"Bermuda",
+   entry:15, prize:1500, slots:48, filled:31},
+  {id:6, name:"Elite Squad Cup", mode:"Squad", map:"Bermuda",
+   entry:50, prize:7000, slots:12, filled:4}
+];
+
+const grid = document.getElementById("tournamentGrid");
+
+function renderTournaments(filter = "All") {
+  const items = tournaments.filter(t =>
+    filter === "All" || t.mode === filter || t.map === filter
+  );
+
+  if (!items.length) {
+    grid.innerHTML = '<div class="empty">No tournaments found.</div>';
+    return;
+  }
+
+  grid.innerHTML = items.map(t => `
+    <article class="card">
+      <div class="card-top">
+        <span class="badge">● DEMO MATCH</span>
+        <span class="muted">${t.mode}</span>
+      </div>
+      <div class="game-icon">🎮</div>
+      <h3>${t.name}</h3>
+      <p class="muted">${t.map} map · ${t.mode} mode</p>
+      <div class="details">
+        <div><small>Entry Fee</small><strong>₹${t.entry}</strong></div>
+        <div><small>Prize Pool</small><strong class="prize">₹${t.prize}</strong></div>
+        <div><small>Slots</small><strong>${t.slots}</strong></div>
+        <div><small>Sample Filled</small><strong>${t.filled}</strong></div>
+      </div>
+      <button class="btn full" onclick="chooseTournament(${t.id})">
+        View / Register
+      </button>
+    </article>
+  `).join("");
+}
+
+document.getElementById("filters").addEventListener("click", event => {
+  const button = event.target.closest("button[data-filter]");
+  if (!button) return;
+
+  document.querySelectorAll(".filter").forEach(b =>
+    b.classList.remove("active")
+  );
+  button.classList.add("active");
+  renderTournaments(button.dataset.filter);
+});
+
+function chooseTournament(id) {
+  const tournament = tournaments.find(t => t.id === id);
+  document.getElementById("gameMode").value = tournament.mode;
+  document.getElementById("register").scrollIntoView({behavior:"smooth"});
+  document.getElementById("formMessage").textContent =
+    tournament.name + " selected. Complete the demo form below.";
+}
+
+document.getElementById("registrationForm").addEventListener("submit", event => {
+  event.preventDefault();
+  document.getElementById("formMessage").textContent =
+    "Demo only: no registration was saved. A secure backend is needed " +
+    "to register players and confirm tournament entries.";
+});
+
+document.getElementById("year").textContent = new Date().getFullYear();
+document.getElementById("tournamentCount").textContent = tournaments.length;
+renderTournaments();
+</script>
+
+</body>
+  </html>
